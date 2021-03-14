@@ -673,10 +673,6 @@ class AddFilesWidget(QWidget):
                 self.pd_files.loc[idx, 'Empty-Room?'] = 0
         self.model.layoutChanged.emit()
 
-    def add_files_starter(self):
-        worker_dialog = WorkerDialog(self, self.add_files, show_buttons=True, show_console=True)
-        worker_dialog.thread_finished.connect(self.addf_finished)
-
     def add_files(self, worker_signals):
 
         # Resolve identical file-names (but different types)
@@ -716,7 +712,9 @@ class AddFilesWidget(QWidget):
                 print('Canceled Loading')
                 break
 
-    def addf_finished(self, _):
+    def add_files_starter(self):
+        WorkerDialog(self, self.add_files, show_buttons=True, show_console=True, blocking=True)
+
         self.pd_files = pd.DataFrame([], columns=['Name', 'File-Type', 'Empty-Room?', 'Path'])
         self.update_model()
 
@@ -884,10 +882,6 @@ class AddMRIWidget(QWidget):
                 print('Selected Folder doesn\'t seem to be a Freesurfer-Segmentation')
         self.populate_list_widget()
 
-    def add_mri_subjects_starter(self):
-        worker_dialog = WorkerDialog(self, self.add_mri_subjects)
-        worker_dialog.thread_finished.connect(self.add_mri_finished)
-
     def add_mri_subjects(self, worker_signals):
         worker_signals.pgbar_max.emit(len(self.folders))
         for n, fsmri in enumerate(self.folders):
@@ -912,7 +906,9 @@ class AddMRIWidget(QWidget):
     def show_errors(self, err):
         ErrorDialog(err, self)
 
-    def add_mri_finished(self, _):
+    def add_mri_subjects_starter(self):
+        WorkerDialog(self, self.add_mri_subjects, blocking=True)
+
         self.list_widget.clear()
         self.folders = list()
         self.paths = dict()

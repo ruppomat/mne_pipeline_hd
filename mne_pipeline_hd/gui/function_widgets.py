@@ -1177,7 +1177,7 @@ class SavePkgDialog(QDialog):
             self.cf.clear_param_items()
 
             self.cf.mw.import_custom_modules()
-            self.cf.mw.update_func_and_param()
+            self.cf.mw.redraw_func_and_param()
             self.close()
 
         else:
@@ -1215,7 +1215,7 @@ class ChooseCustomModules(QDialog):
     def closeEvent(self, event):
         self.mw.settings['selected_modules'] = self.selected_modules
         self.mw.import_custom_modules()
-        self.mw.update_func_and_param()
+        self.mw.redraw_func_and_param()
         event.accept()
 
 
